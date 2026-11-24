@@ -1,0 +1,56 @@
+{
+    "name": "Device-A",
+    "display_name": "移动式叶绿素荧光成像仪 Device-A",
+    "manufacturer": "Plant Technology Co., Ltd.",
+    "parameters": [
+        "Fo",
+        "Fm",
+        "Fv",
+        "Fv/Fm",
+        "Fv/Fo",
+        "Ft",
+        "Fmp",
+        "Y(II)",
+        "NPQ",
+        "qP",
+        "qL",
+        "qN",
+        "ETR",
+        "Rfd",
+        "PAR",
+        "NIR",
+        "R",
+        "G",
+        "B",
+        "RE",
+        "NDVI",
+        "EVI",
+        "SAVI",
+        "GNDVI",
+        "PSRI",
+        "ARI"
+    ],
+    "supported_experiment_types": [
+        "Fv/Fm测量",
+        "快速光曲线",
+        "慢动力学",
+        "Ft/Fm'分析",
+        "NPQ诱导与弛豫"
+    ],
+    "default_al_intensity_range": [
+        1,
+        100
+    ],
+    "default_dark_adaptation": {
+        "Device-A通用建议": "至少20-30 min",
+        "草本植物": "至少20-30 min",
+        "木本植物": "20-30 min"
+    },
+    "manual_version": "V2.0",
+    "camera_type": "CMOS",
+    "standard_imaging_range_cm": [
+        20,
+        22
+    ],
+    "display_name_en": "Portable Chlorophyll Fluorescence Imaging System Device-A"
+}

@@ -1,0 +1,16 @@
+# 运行产物
+outputs/
+# Python 缓存
+__pycache__/
+*.py[cod]
+.venv/
+# 本地配置与持久化状态（含 API Key，切勿提交）
+.env
+.env.*
+!.env.example
+.demo_state/
+# 历史遗留的明文密钥文件（已弃用，凭证统一走 .env）
+API-KEY.txt
+# 大规模检索资产（2.3GB，按 README 说明本地同步，不随仓库分发）
+data/chroma_db/
+data/papers/
