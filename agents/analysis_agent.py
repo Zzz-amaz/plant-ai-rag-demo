@@ -160,7 +160,7 @@ class AnalysisAgent:
             self._llm = build_default_llm()
         return self._llm
 
-    # ── 图构建 ────────────────────────────────────
+    # --- 图构建 ---
 
     def _build_graph(self):
         builder = StateGraph(AnalysisState)
@@ -180,7 +180,7 @@ class AnalysisAgent:
         builder.add_edge("handle_error", END)
         return builder.compile()
 
-    # ── 节点：分类 ────────────────────────────────
+    # --- 节点：分类 ---
 
     def _classify_csv(self, state: AnalysisState) -> dict:
         """用 pandas 读取 CSV，代码级分类（结果确定，不依赖 LLM）。"""
@@ -453,7 +453,7 @@ class AnalysisAgent:
             ]
         return best_par
 
-    # ── 节点：工具调用 ────────────────────────────
+    # --- 节点：工具调用 ---
 
     def _call_tools(self, state: AnalysisState) -> dict:
         """把图表类型×参数展开为独立任务，逐个调用工具。"""
@@ -575,7 +575,7 @@ class AnalysisAgent:
                 tasks.append({"chart_type": chart_type, "param": param})
         return tasks
 
-    # ── 节点：报告生成 ────────────────────────────
+    # --- 节点：报告生成 ---
 
     def _generate_report(self, state: AnalysisState) -> dict:
         """LLM 基于统计事实撰写最终报告。"""
@@ -701,13 +701,13 @@ class AnalysisAgent:
         """数据不可用时的错误输出（不调用工具、不调用模型）。"""
         return {"markdown_report": state["error_message"]}
 
-    # ── 路由 ──────────────────────────────────────
+    # --- 路由 ---
 
     @staticmethod
     def _route_after_classify(state: AnalysisState) -> str:
         return "handle_error" if state["chart_type"] == "error" else "call_tools"
 
-    # ── 对外接口 ──────────────────────────────────
+    # --- 对外接口 ---
 
     def classify(self, csv_path: str) -> dict:
         """只执行分类节点。

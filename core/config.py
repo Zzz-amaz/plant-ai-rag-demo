@@ -1,8 +1,8 @@
 """运行配置：全部来自环境变量或项目根目录的 .env。
 
-替代原项目的 ``core/config.py``：去掉 pydantic-settings、Windows 打包路径
-探测、加密凭证库与 SQLite，只保留 RAG 链路真正读取的字段，字段名与默认值
-保持与原项目一致，因此移植过来的模块无需改动读取方式。
+只保留 RAG 链路与页面实际读取的字段，按功能分组（模型 / 向量库 / 检索预算 /
+路径）。字段名与默认值集中在本模块定义，业务代码通过 ``settings`` 与少量
+辅助函数读取，不直接访问 ``os.environ``。
 """
 
 from __future__ import annotations
@@ -72,7 +72,7 @@ class Settings:
         self.LLM_PROVIDER = _env_str("LLM_PROVIDER", "deepseek")
         self.LLM_MODEL = _env_str("LLM_MODEL", "deepseek-chat")
         self.LLM_BASE_URL = _env_str("LLM_BASE_URL", "https://api.deepseek.com/v1")
-        # 演示项目沿用 DEEPSEEK_API_KEY，同时兼容原项目的 LLM_API_KEY
+        # API Key：优先读通用变量名，兼容只配了 DEEPSEEK_API_KEY 的环境
         self.LLM_API_KEY = _env_str(
             "LLM_API_KEY", _env_str("DEEPSEEK_API_KEY", "")
         )
@@ -176,7 +176,7 @@ class Settings:
         self.MAX_CSV_SIZE_MB = _env_int("MAX_CSV_SIZE_MB", 20)
         self.LOG_LEVEL = _env_str("LOG_LEVEL", "INFO")
 
-    # ── 路径 ──────────────────────────────────────
+    # --- 路径 ---
 
     @property
     def install_root(self) -> Path:

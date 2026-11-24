@@ -1,7 +1,7 @@
-"""统一日志入口：替代原项目的 loguru，输出到标准错误流。
+"""统一日志入口：向标准错误流输出，各模块共用同一份格式配置。
 
-原模块只用到 ``info/warning/error/debug/exception`` 五个方法，
-这里做一个薄包装，同时兼容 ``logger.info("x {}", v)`` 的花括号占位写法。
+只暴露 ``info`` / ``warning`` / ``error`` / ``debug`` / ``exception`` 五个方法，
+并兼容 ``logger.info("x {}", v)`` 的花括号占位写法。
 """
 
 from __future__ import annotations
@@ -31,7 +31,7 @@ def _configure() -> None:
 
 
 class _CompatLogger:
-    """loguru 风格的最小适配器。"""
+    """最小适配器：保留常见的花括号占位符写法。"""
 
     def __init__(self, name: str) -> None:
         _configure()

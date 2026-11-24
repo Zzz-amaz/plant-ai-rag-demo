@@ -612,7 +612,7 @@ class PlantRetriever(BaseRetriever):
         return scored
 
 
-# ── 去重工具函数 ──────────────────────────────────
+# --- 去重工具函数 ---
 
 def _dedup_by_paper_id(documents: list[Document], max_per_paper: int = 2) -> list[Document]:
     """按 paper_id 去重：同一篇论文最多保留 N 个最高分块。"""
@@ -669,7 +669,7 @@ def _dedup_by_cosine(documents: list[Document], threshold: float = 0.85) -> list
     return keep + no_emb
 
 
-# ── 工厂函数 ──────────────────────────────────────
+# --- 工厂函数 ---
 
 def create_retriever(
     device_name: str | None = None,

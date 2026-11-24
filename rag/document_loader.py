@@ -1,7 +1,7 @@
 """加载设备知识文档（.txt / .md / .pdf / .docx）。
 
-原项目从加密资源包解密到内存；演示版直接读取 ``devices/<device>/``，
-保留相同的分段、标题识别与 MD5 增量逻辑。
+统一读取 ``devices/<device>/`` 下的文件，按类型分段、识别标题，并用 MD5
+判断是否需要重新索引。
 """
 
 from __future__ import annotations
@@ -56,8 +56,8 @@ def _save_md5_registry(device_name: str, registry: dict[str, str]) -> None:
 def _get_device_files(device_name: str) -> dict[str, bytes]:
     """读取设备知识文件（.txt/.md/.pdf/.docx）。
 
-    原项目从加密的 ``secure_assets.bin`` 中解密；演示版直接读
-    ``devices/<device_name>/`` 明文目录，行为与返回值保持一致。
+    以字节流返回，交给调用方决定解码方式；扫描 ``devices/<device_name>/``
+    下的全部子目录，跳过无关文件。
     """
     result: dict[str, bytes] = {}
     device_dir = settings.devices_dir / device_name

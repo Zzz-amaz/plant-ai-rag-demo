@@ -75,7 +75,7 @@ def decide_query_route(
     - ``general``: stable concept/causal explanation; no source claimed.
     - ``manual``: Device-A operation or a manual-confirmable setting.
     - ``paper``: literature finding, evidence interpretation, or paper detail.
-    - ``mixed``: the user explicitly combines Demo operation with literature.
+    - ``mixed``: the user explicitly combines device operation with literature.
     """
 
     text = str(query or "").casefold()

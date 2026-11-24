@@ -1,7 +1,7 @@
 """Agent 系统提示词（内联版）。
 
-原项目从加密资源包 ``devices/<设备>/prompt_*.txt`` 读取，Demo 直接内联，
-便于阅读与按需修改。设备名已统一脱敏为 Device-A。
+提示词直接写在模块常量里，便于阅读与调整；设备名以模板参数注入，
+默认 Device-A。
 """
 
 from __future__ import annotations

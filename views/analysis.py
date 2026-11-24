@@ -1,6 +1,6 @@
 """智能数据分析页。
 
-交互复刻要点：
+页面流程：
 - 多文件上传 → 大小/列结构校验 → 按行合并；
 - 参数配置区（物种、处理、时间、标签说明、绘图偏好）；
 - 两段式确认：先分类并弹窗预览，确认后再执行完整分析；
@@ -55,7 +55,7 @@ def render() -> None:
         _preview_dialog()
 
 
-# ── 数据导入 ──────────────────────────────────────
+# --- 数据导入 ---
 
 
 def _render_uploader() -> None:
@@ -176,7 +176,7 @@ def _reset_dataset() -> None:
     st.session_state.an_preview = None
 
 
-# ── 参数配置 ──────────────────────────────────────
+# --- 参数配置 ---
 
 
 def _render_context_form() -> None:
@@ -313,7 +313,7 @@ def _preview_dialog() -> None:
         st.rerun(scope="app")
 
 
-# ── 执行与结果 ────────────────────────────────────
+# --- 执行与结果 ---
 
 
 def _render_result() -> None:

@@ -1,8 +1,8 @@
-# Plant-AI Demo —— 真实论文 RAG 链路复刻
+# Plant-AI Demo —— 可溯源的论文 RAG 问答
 
-从生产项目 `FDM-AI-NEW` 抽取的**真实**检索增强链路：Chroma 向量库、BM25 词法召回、
-RRF 融合、qwen3-rerank 重排、证据绑定式作答与数字溯源校验，全部指向本地 75,779 段
-真实论文证据。**没有 mock 数据、没有假回答降级**：缺凭证就报错。
+一套完整的检索增强问答链路：Chroma 向量库、BM25 词法召回、RRF 融合、
+qwen3-rerank 重排、证据绑定式作答与数字溯源校验，指向本地 75,779 段真实
+论文证据。**没有 mock 数据、没有假回答兜底**：缺凭证就报错，检索不到就拒答。
 
 ## 链路总览
 
@@ -38,11 +38,12 @@ RRF 融合、qwen3-rerank 重排、证据绑定式作答与数字溯源校验，
 | 研究类型标签 | `.../paper_research_tags.jsonl` | 793 KB |
 | 实验事实卡 | `.../fact_cards/fact_cards.jsonl` | 905 KB |
 | 补充语料（数据分析向） | `data/papers/data_analysis_evidence_index/` | 51 MB |
-| 设备手册（脱敏后） | `devices/Device-A/` | 1.9 MB，含 .docx 手册 |
+| 设备知识文档 | `devices/Device-A/` | 1.9 MB，含 .docx 手册与操作规范 |
 | 设备向量集合 | `plant_Device-A` | 41 段 |
 
-> `data/chroma_db/` 与 `data/papers/` 体积过大，已在 `.gitignore` 中排除；
-> 换机器时需从原项目同步这两个目录，然后执行一次集合改名（见文末）。
+> `data/chroma_db/` 与 `data/papers/` 体积过大，已在 `.gitignore` 中排除，
+> 仓库只包含代码与设备文档。因此**克隆后没有数据是跑不通检索的**，
+> 下文「如何验证链路是真的」给了不依赖数据的核验方式。
 
 ## 快速开始
 
@@ -89,8 +90,17 @@ https://doi.org/10.7717/peerj.10046. doi: 10.7717/peerj.10046.
 3. 「检索证据（10 段）」折叠区列出每段的重排得分（0.75~0.90）与章节路径，
    说明证据来自 Chroma 召回结果而非模型臆造
 
-**验证防幻觉**：把同一问题的数字改成原文不存在的值（例如问「干旱下 Fv/Fm 下降 12.5%
-是否合理」），校验器会剔除该声明并给出「证据不足」的收敛回答。
+**验证防幻觉**（两层，拦在不同位置）：
+
+1. **论文锁**：Top1 重排分与 Top2 的差值小于 `0.10` 时，判定"命中对象不唯一"，
+   中断生成并列出候选论文让用户澄清（`rag/scalable_retrieval.py` 的
+   `assess_paper_lock_confidence`）。此时大模型尚未被调用，任何自然语言指令都
+   无法绕过这一层。
+2. **数字溯源**：即使锁定了论文，模型输出的每个数值仍要与证据切片比对，
+   原文里找不到的数字整条剔除（`rag/citation_validator.py`）。这一层可以直接
+   单测：构造一条证据 + 两条声明（`6.8%` 与虚构的 `12.5%`），调用
+   `validate_and_render_answer(..., allow_partial_claims=True)`，结果应为
+   `accepted: 1, dropped: 1, warnings: ('claim_2_unsupported_numbers:12.5%',)`。
 
 ## 目录结构
 
@@ -102,8 +112,8 @@ views/
   analysis.py          智能数据分析（真实 CSV 统计 + 图表 + 报告）
   assistant.py         论文问答（真实 RAG）
 core/
-  config.py            环境变量配置（字段名与原项目一致）
-  logging.py           标准库日志适配（替代 loguru）
+  config.py            环境变量配置（env 驱动，字段集中定义）
+  logging.py           标准库日志封装（统一格式）
 rag/
   vector_store.py      Chroma + DashScope Embedding
   chroma_paper_search.py  向量召回
@@ -115,7 +125,7 @@ rag/
   paper_citations.py      书目与 DOI 渲染
   retriever.py            设备手册混合检索（Device-A）
   document_loader.py      设备 .docx/.pdf 分段
-  ...（共 26 个模块，业务逻辑与原项目一致）
+  ...（共 26 个模块，按召回 / 融合 / 校验 / 渲染分层）
 evaluation/
   qwen_rerank.py       DashScope text-rerank 客户端（SDK 缺失时走 HTTP）
   local_hybrid.py      BM25 索引
@@ -127,23 +137,24 @@ services/
   paper_rag_factory.py / paper_rag_pipeline.py  装配与流水线
   llm_gateway.py       凭证检查与客户端构建
   export.py            Markdown → docx
-devices/Device-A/      脱敏后的设备手册与操作规范
+devices/Device-A/      设备手册与操作规范
 ```
 
 ## 数据说明
 
-企业标识、设备型号与内部路径已统一替换为中性名称（企业 → `Plant Technology Co., Ltd.`，设备 → `Device-A`），
-代码、设备文档与向量块三处均已处理。论文语料为公开文献，未做任何内容删改，`叶绿素荧光` 等学科术语保留原样。
+论文语料为公开文献，未做内容删改。设备文档与向量分块中的企业标识、设备型号、
+内部路径统一为中性名称（`Plant Technology Co., Ltd.` / `Device-A`），
+`叶绿素荧光` 等学科术语保留原样。
 
-## 与原项目的差异
+## 工程取舍
 
-| 原实现 | 现实现 |
-|---|---|
-| SQLite 会话/历史 + 鉴权 + 加密凭证库 | `st.session_state` + `.demo_state/*.json`，凭证只读 `.env` |
-| `loguru` + JSONL 审计 | 标准库 `logging` |
-| 加密资源包 `secure_assets.bin` | `devices/` 明文目录（已脱敏） |
-| 打包路径探测（exe/one-folder） | 项目根目录相对路径 |
-| 手册问答路由 + 联网兜底 + 推荐卡片 | 保留论文链路；手册检索能力（`PlantRetriever`）仍在，未接入页面 |
+| 决策 | 做法 | 理由 |
+|---|---|---|
+| 会话存储 | `st.session_state` + `.demo_state/*.json` | 单机使用不需要数据库，刷新后仍可恢复 |
+| 凭证管理 | 只读 `.env`，缺失即报错 | 密钥不落盘，也不做"看起来能用"的降级 |
+| 设备资源 | `devices/` 明文目录 | clone 后可直接阅读、直接进 RAG 索引 |
+| 路径解析 | 项目根目录相对路径 | 不依赖打包形态，迁移成本低 |
+| 手册问答 | `PlantRetriever` 可用，未接入页面 | 本仓库聚焦论文链路，手册检索留作扩展点 |
 
 ## 换机器后如何对齐集合名
 

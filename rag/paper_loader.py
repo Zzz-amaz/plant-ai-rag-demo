@@ -139,7 +139,7 @@ def _load_abstract_paper(paper: dict) -> list[Document]:
     return [Document(page_content=content, metadata=meta)]
 
 
-# ── PDF 加载 ──────────────────────────────────────
+# --- PDF 加载 ---
 
 def _load_pdf_paper(paper: dict, papers_dir: Path) -> list[Document]:
     """用 pymupdf 提取 PDF 全文。"""
@@ -235,7 +235,7 @@ def _split_into_paragraphs(text: str) -> list[str]:
     return paragraphs
 
 
-# ── XML 加载 ──────────────────────────────────────
+# --- XML 加载 ---
 
 def _load_xml_paper(paper: dict, papers_dir: Path) -> list[Document]:
     """从 JATS XML 提取章节文本。"""

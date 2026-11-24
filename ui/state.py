@@ -1,9 +1,9 @@
 """全局会话状态与轻量持久化。
 
-所有页面共享 ``st.session_state``；同时把生成历史与对话存档落盘到
-``.demo_state/*.json``，使浏览器刷新后仍能恢复。
-模型凭证统一由 ``.env`` 提供，这里只保存会话内的临时覆盖值，不落盘。
-全程不引入任何数据库：写入失败时静默降级为纯内存会话。
+所有页面共享 ``st.session_state``；生成历史与对话存档另外落盘到
+``.demo_state/*.json``，浏览器刷新后仍能恢复。模型凭证由 ``.env`` 提供，
+这里只保存会话内的临时覆盖值，不落盘。全程不引入数据库：写入失败时
+降级为纯内存会话。
 """
 
 from __future__ import annotations
@@ -20,7 +20,7 @@ STATE_DIR = Path(__file__).resolve().parent.parent / ".demo_state"
 _HISTORY_FILE = STATE_DIR / "history.json"
 _CHAT_FILE = STATE_DIR / "chat.json"
 
-# 原项目 history_manager 的两个存储桶，页面侧沿用同名 API
+# 生成历史与对话存档两个桶，读写语义保持一致
 HISTORY_BUCKETS = {
     "experiment_history": "exp_history",
     "analysis_history": "an_history",
@@ -46,7 +46,7 @@ def _write_json(path: Path, payload: Any) -> None:
         pass
 
 
-# ── 初始化 ────────────────────────────────────────
+# --- 初始化 ---
 
 
 def init_state() -> None:
@@ -77,7 +77,7 @@ def init_state() -> None:
         st.session_state.setdefault(key, value)
 
 
-# ── 生成历史（对齐原 history_manager 的调用方式）────
+# --- 生成历史 ---
 
 
 def _bucket_key(kind: str) -> str:
@@ -135,7 +135,7 @@ def load_history_detail(record_id: str, kind: str = "analysis_history") -> Dict[
     return None
 
 
-# ── 对话存档 ──────────────────────────────────────
+# --- 对话存档 ---
 
 
 def load_chat_state() -> Dict[str, Any]:

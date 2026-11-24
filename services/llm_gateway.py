@@ -1,7 +1,7 @@
-"""模型网关：凭证统一来自 ``.env``，不提供任何演示降级。
+"""模型网关：凭证统一来自 ``.env``，缺失时直接报错。
 
-缺少 Key 时直接抛 :class:`MissingCredentialsError`，由页面渲染
-「请配置 Key」的错误提示；有 Key 时返回真实的 ChatOpenAI 客户端。
+没有 Key 就抛 :class:`MissingCredentialsError`，由页面渲染「请配置 Key」；
+有 Key 时返回真实的 ChatOpenAI 客户端，不做任何离线兜底。
 """
 
 from __future__ import annotations

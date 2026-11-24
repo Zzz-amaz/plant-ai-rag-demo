@@ -444,7 +444,7 @@ def list_indexed_devices() -> list[str]:
     ]
 
 
-# ── 论文知识库 ────────────────────────────────────
+# --- 论文知识库 ---
 
 _paper_vector_store: VectorStore | None = None
 
