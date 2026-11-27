@@ -1,3 +1,5 @@
+
+https://github.com/user-attachments/assets/fc55a0d5-cb3b-48aa-9863-ef75d933a348
 # Plant-AI Demo｜叶绿素荧光科研辅助系统
 
 基于 Python、RAG 与 LLM
@@ -19,6 +21,18 @@
 **实现方式：** Prompt 组织 + LLM 生成 + 流式输出。
 
 **界面截图：**
+
+
+
+https://github.com/user-attachments/assets/83a042ee-a4f5-4c9d-b6ed-76cca898ade1
+
+
+https://github.com/user-attachments/assets/7a301763-620c-4488-93fd-7396696ae24f
+
+
+https://github.com/user-attachments/assets/0f14d94a-8fbb-4f00-895c-b599a8a34096
+
+
 
 ![实验方案生成界面](images/image-20261124203016161.png)
 
