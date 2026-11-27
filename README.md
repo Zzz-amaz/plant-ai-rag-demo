@@ -1,5 +1,4 @@
 
-https://github.com/user-attachments/assets/fc55a0d5-cb3b-48aa-9863-ef75d933a348
 # Plant-AI Demo｜叶绿素荧光科研辅助系统
 
 基于 Python、RAG 与 LLM
@@ -20,23 +19,10 @@ https://github.com/user-attachments/assets/fc55a0d5-cb3b-48aa-9863-ef75d933a348
 
 **实现方式：** Prompt 组织 + LLM 生成 + 流式输出。
 
-**界面截图：**
+**界面：**
 
+https://github.com/user-attachments/assets/a4557f82-2cf1-429d-8adf-04f6353afe18
 
-
-https://github.com/user-attachments/assets/83a042ee-a4f5-4c9d-b6ed-76cca898ade1
-
-
-https://github.com/user-attachments/assets/7a301763-620c-4488-93fd-7396696ae24f
-
-
-https://github.com/user-attachments/assets/0f14d94a-8fbb-4f00-895c-b599a8a34096
-
-
-
-![实验方案生成界面](images/image-20261124203016161.png)
-
-![实验方案生成结果](images/image-20261124203047059.png)
 
 > 说明：当前模块采用提示词生成方式，不经过论文向量检索，参考来源不具备DOI 级自动溯源能力。
 
@@ -53,17 +39,9 @@ https://github.com/user-attachments/assets/0f14d94a-8fbb-4f00-895c-b599a8a34096
 **核心设计：**
 将数值计算与大模型文本解读分离，统计结果由代码计算产生，模型负责结合已有结果进行解释，降低模型直接生成错误统计数值的风险。
 
-**界面截图：**
+**界面：**
 
-![数据分析界面](images/image-20261124203247492.png)
-
-![数据统计结果](images/image-20261124203543817.png)
-
-
-
-![数据分析报告](images/image-20261124203621427.png)
-
-
+https://github.com/user-attachments/assets/777037a3-fa72-4096-b37e-36b9c15640fd
 
 ### 3. 科研问答助手
 
