@@ -21,7 +21,7 @@
 
 **界面：**
 
-https://github.com/user-attachments/assets/a4557f82-2cf1-429d-8adf-04f6353afe18
+https://github.com/user-attachments/assets/978b33e0-a2cc-463c-a5ca-e9f5080930a9
 
 
 > 说明：当前模块采用提示词生成方式，不经过论文向量检索，参考来源不具备DOI 级自动溯源能力。
